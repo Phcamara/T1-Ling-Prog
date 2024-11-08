@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+void insertNode(struct Node** head, int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = *head;
+    *head = newNode;
+}
+
+void printList(struct Node* head) {
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+void insertionSort(struct Node** head) {
+    if (*head == NULL || (*head)->next == NULL) {
+        return; 
+    }
+
+    struct Node* sorted = NULL;  
+    struct Node* current = *head;  
+    struct Node* nextNode = NULL;
+
+    while (current != NULL) {
+        nextNode = current->next; 
+        if (sorted == NULL || sorted->data >= current->data) {
+            current->next = sorted;
+            sorted = current;
+        } else {
+            struct Node* temp = sorted;
+            while (temp->next != NULL && temp->next->data < current->data) {
+                temp = temp->next;
+            }
+            current->next = temp->next;
+            temp->next = current;
+        }
+        current = nextNode;
+    }
+    *head = sorted;
+}
+
+int main() {
+    struct Node* head = NULL;
+    int n, value;
+
+    printf("Digite o número de elementos na lista: ");
+    scanf("%d", &n);
+    printf("Digite os %d elementos da lista:\n", n);
+
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &value);
+        insertNode(&head, value);
+    }
+
+    insertionSort(&head);
+    printf("Lista após a ordenação:\n");
+    printList(head);
+
+    return 0;
+}
